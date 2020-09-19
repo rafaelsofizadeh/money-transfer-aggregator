@@ -5,7 +5,6 @@ const config = require("../config.json");
 const port = config["port"];
 
 const api = express();
-api.use(cors());
 api.use(express.urlencoded({ extended: true }));
 api.use(express.json());
 
