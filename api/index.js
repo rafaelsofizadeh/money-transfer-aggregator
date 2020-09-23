@@ -10,7 +10,7 @@ const api = express();
 api.use(express.urlencoded({ extended: true }));
 api.use(express.json());
 
-api.all("*", async (request, response) => {
+api.get("/api", async (request, response) => {
   const browser = await puppeteer.launch({});
 
   const transferwiseGetQuote = Transferwise(true);
