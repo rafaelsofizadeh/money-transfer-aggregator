@@ -4,7 +4,7 @@ require("./quoteGetters").then((quoteGetters) => {
   api.use(express.urlencoded({ extended: true }));
   api.use(express.json());
 
-  api.listen(require("./config.json")["port"], () => {
+  api.listen(process.env.PORT || require("./config.json")["port"], () => {
     api.get("/", require("./controller")(quoteGetters));
     console.log("READY");
   });
