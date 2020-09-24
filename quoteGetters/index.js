@@ -5,7 +5,7 @@ const easysendGetQuote = require("./easysend");
 const MITM = require("./manInTheMiddle");
 
 module.exports = (async () => {
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
 
   const transferwiseGetQuote = Transferwise(true);
   console.log("Transferwise init");
