@@ -1,5 +1,5 @@
 module.exports = {
-  Deferred: function Deferred() {
+  Deferred: function () {
     let deferred = {};
     let promise = new Promise((resolve, reject) => {
       deferred.resolve = resolve;

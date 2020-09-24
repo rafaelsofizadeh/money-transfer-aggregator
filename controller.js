@@ -1,3 +1,4 @@
+const { parseParams } = require("./util");
 const mapping = require("./config.json")["mapping"];
 
 module.exports = ({
@@ -12,7 +13,7 @@ module.exports = ({
     recipientCurrency,
     recipientCountry,
     senderAmount,
-  } = request.query;
+  } = parseParams(request.query);
 
   if (
     !mapping.countryCodes[senderCountry] ||
@@ -34,10 +35,18 @@ module.exports = ({
     });
   }
 
+  if (isNaN(senderAmount)) {
+    return response.json({
+      error: "Sender amount should be a float number.",
+    });
+  }
+
+  const parsedAmount = Number(senderAmount.toFixed(4));
+
   const transferwiseResult = transferwiseGetQuote(
     senderCurrency,
     recipientCurrency,
-    senderAmount
+    parsedAmount
   );
 
   const skrillResult = await skrillGetQuote({
@@ -45,13 +54,13 @@ module.exports = ({
     senderCountry,
     recipientCurrency,
     recipientCountry,
-    senderAmount,
+    senderAmount: parsedAmount,
   });
 
   const spokoResult = await spokoGetQuote({
     sourceCurrency: senderCurrency,
     destinationCurrency: recipientCurrency,
-    sourceAmount: senderAmount,
+    sourceAmount: parsedAmount,
   });
 
   const easysendResult = easysendGetQuote(
@@ -59,7 +68,7 @@ module.exports = ({
     senderCurrency,
     mapping.countryCodes[recipientCountry],
     recipientCurrency,
-    (senderAmount * 100).toString()
+    (parsedAmount * 100).toString()
   );
 
   return Promise.allSettled([
