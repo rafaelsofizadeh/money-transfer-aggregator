@@ -41,7 +41,7 @@ module.exports = ({
     });
   }
 
-  const parsedAmount = Number(senderAmount.toFixed(2));
+  const parsedAmount = parseFloat(parseFloat(senderAmount).toFixed(2));
 
   const transferwiseResult = transferwiseGetQuote(
     senderCurrency,
