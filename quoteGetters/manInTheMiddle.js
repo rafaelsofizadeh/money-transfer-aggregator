@@ -14,14 +14,10 @@ module.exports = async (browser, url, inputSelector, interceptUrl) => {
     addRequestInterceptor(page, payload);
     addResponseInterceptor(page, resolve, reject);
 
-    await page.screenshot({ path: "anon.png" });
-
     //https://stackoverflow.com/a/52633235
     const input = await page.$(inputSelector);
     await input.click({ clickCount: 3 });
     await input.type(Math.floor(Math.random() * 1000).toString());
-
-    await page.screenshot({ path: "aton.png" });
 
     return promise;
   };
