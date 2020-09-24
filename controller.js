@@ -37,7 +37,7 @@ module.exports = ({
 
   if (isNaN(senderAmount)) {
     return response.json({
-      error: "Sender amount should be a float number.",
+      error: "Amount should be a float number.",
     });
   }
 
