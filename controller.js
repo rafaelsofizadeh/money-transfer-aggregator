@@ -13,7 +13,7 @@ module.exports = ({
     recipientCurrency,
     recipientCountry,
     senderAmount,
-  } = parseParams(request.query);
+  } = request.query;
 
   if (
     !mapping.countryCodes[senderCountry] ||
@@ -41,7 +41,7 @@ module.exports = ({
     });
   }
 
-  const parsedAmount = Number(senderAmount.toFixed(4));
+  const parsedAmount = Number(senderAmount.toFixed(2));
 
   const transferwiseResult = transferwiseGetQuote(
     senderCurrency,
