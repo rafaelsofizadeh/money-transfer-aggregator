@@ -1,33 +1,48 @@
 const puppeteer = require("puppeteer");
 
-const Transferwise = require("./transferwise");
+const transferwiseGetQuote = require("./transferwise");
 const easysendGetQuote = require("./easysend");
+const azimoGetQuote = require("./azimo");
 const MITM = require("./manInTheMiddle");
 
 module.exports = (async () => {
-  const browser = await puppeteer.launch({ args: ["--no-sandbox"] });
+  const browser = await puppeteer.launch({
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    ignoreHTTPSErrors: true,
+    dumpio: false,
+  });
 
-  const transferwiseGetQuote = Transferwise(true);
-  console.log("Transferwise init");
   const skrillGetQuote = await MITM(
+    "skrill",
     browser,
+    undefined,
+    undefined,
+    undefined,
     "https://transfers.skrill.com/smt/calculator/marketing",
     "body > dr-root > div > ng-component > div > dr-transfer-calculator > div > ul > li.calculator__sender > dr-amount > label > input",
     "/preview"
   );
-  console.log("Skrill init");
+
   const spokoGetQuote = await MITM(
+    "spoko",
     browser,
+    {
+      senderCurrency: "sourceCurrency",
+      ecipientCurrency: "destinationCurrency",
+      senderAmount: "sourceAmount",
+    },
+    undefined,
+    undefined,
     "https://spoko.app",
-    "#layout > div > div:nth-child(2) > div > div > div.hero > div.spokoRootIndex-calcWrapper.right > div > form > div:nth-child(1) > div:nth-child(2) > div.wrap > input",
+    '#layout > div > div[ui-view="content"] > div > div > div.hero > div.spokoRootIndex-calcWrapper.right > div > form > div:not([class]) > div:nth-child(2) > div.wrap > input',
     "/calculate"
   );
-  console.log("Spoko init");
 
   return {
     transferwiseGetQuote,
     skrillGetQuote,
     spokoGetQuote,
     easysendGetQuote,
+    azimoGetQuote,
   };
 })();

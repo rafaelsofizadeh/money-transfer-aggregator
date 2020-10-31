@@ -1,57 +1,44 @@
+"use strict";
 const axios = require("axios");
+const { signatureHandler } = require("../util");
 
-module.exports = (sandbox) => {
-  return (senderCurrency, recipientCurrency, senderAmount) =>
-    request({
-      method: "post",
-      sandbox,
-      path: "/quotes",
-      data: {
-        source: senderCurrency,
-        target: recipientCurrency,
-        sourceAmount: senderAmount,
-        rateType: "FIXED",
-        type: "BALANCE_PAYOUT",
-      },
-    })
-      .then((result) => result.data)
-      .catch((error) => error);
+module.exports = async (queryConfig, sandbox = true) => {
+  const { senderCurrency, recipientCurrency, senderAmount } = signatureHandler(
+    queryConfig
+  );
 
-  function request({
-    method = "get",
-    path = "",
-    version = "v1",
-    sandbox = false,
-    data,
-  }) {
-    const requestOptions = {
-      baseURL: sandbox
-        ? "https://api.sandbox.transferwise.tech"
-        : "https://api.transferwise.com",
-      url: `/${version}${path}`,
-      method,
-      headers: {
-        Authorization: "Bearer 3dd320ab-2fd2-4ba3-872e-34ff415ceff5",
-        "Content-Type": "application/json",
-      },
-      ...(data && { data }),
-    };
+  console.log("TRANSFERWISE PAYLOAD:", {
+    senderCurrency,
+    recipientCurrency,
+    senderAmount,
+  });
 
-    return axios(requestOptions).catch(
-      (error) =>
-        new Error(
-          `${error.name}:${error.message}\n${JSON.stringify(
-            {
-              ...requestOptions,
-              ...{
-                ...requestOptions.headers,
-                Authorization: "Bearer <API Token>",
-              },
-            },
-            null,
-            2
-          )}`
-        )
-    );
-  }
+  const requestOptions = {
+    baseURL: sandbox
+      ? "https://api.sandbox.transferwise.tech"
+      : "https://api.transferwise.com",
+    url: `/v1/quotes`,
+    method: "post",
+    headers: {
+      Authorization: "Bearer 3dd320ab-2fd2-4ba3-872e-34ff415ceff5",
+      "Content-Type": "application/json",
+    },
+    data: {
+      source: senderCurrency,
+      target: recipientCurrency,
+      sourceAmount: senderAmount,
+      rateType: "FIXED",
+      type: "BALANCE_PAYOUT",
+    },
+  };
+
+  // DETERMINE / TODO: How to reject a promise here (in an async/await function)? Does throwing an error cause a promise rejection?
+  const { data: result } = await axios(requestOptions).catch((error) => {
+    console.log(error);
+    console.log(requestOptions);
+    throw error;
+  });
+
+  // TODO: format result
+  return { name: "transferwise", result };
 };
