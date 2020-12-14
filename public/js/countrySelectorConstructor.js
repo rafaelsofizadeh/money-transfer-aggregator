@@ -2013,31 +2013,37 @@ const countryChoices = [
   },
 ];
 
-const normalizedCountryData = countryChoices.map(({ name, iso2, iso3 }) => ({
+const normalizedCountryChoices = countryChoices.map(({ name, iso2, iso3 }) => ({
   value: iso3,
   label: name,
-  countryIso2: iso2,
+  customProperties: {
+    countryIso2: iso2,
+  },
 }));
 
-module.exports = (selectElements) =>
-  selectElements.map(
-    (selectElement) =>
-      new Choices(selectElement, {
-        itemSelectText: "Нажмите для выбора",
-        callbackOnCreateTemplates: function (stringToElement) {
-          const ejsItemString = `<div
+const selectElements = Array.from(
+  document.getElementsByClassName("country-selector")
+);
+
+selectElements.map(
+  (selectElement) =>
+    new Choices(selectElement, {
+      choices: normalizedCountryChoices,
+      itemSelectText: "Нажмите для выбора",
+      callbackOnCreateTemplates: function (stringToElement) {
+        const ejsItemString = `<div
             class="<%= classNames.item %> <%= data.highlighted ? classNames.highlightedState : classNames.itemSelectable %>" 
             data-item 
             data-id="<%= data.id %>" 
             data-value="<%= data.value %>" 
             aria-selected="true">
-              <span class="flag-icon flag-icon-<%= data.countryIso2.toLowerCase() %>"></span>
+              <span class="flag-icon flag-icon-<%= data.customProperties.countryIso2.toLowerCase() %>"></span>
               <%= data.label %> 
             </div>`;
 
-          const optionItemTemplate = ejs.compile(ejsItemString);
+        const optionItemTemplate = ejs.compile(ejsItemString);
 
-          const ejsChoiceString = `<div 
+        const ejsChoiceString = `<div 
             class="<%= classNames.item %> <%= classNames.itemSelectable %>" 
             data-choice 
             data-select-text="<%= data.itemSelectText %>" 
@@ -2047,35 +2053,37 @@ module.exports = (selectElements) =>
             aria-selected="true" 
             role="option"
           > 
-            <span class="flag-icon flag-icon-<%= data.countryIso2.toLowerCase() %>"></span>
+            <span class="flag-icon flag-icon-<%= data.customProperties.countryIso2.toLowerCase() %>"></span>
             <%= data.label %> 
           </div>`;
 
-          const optionChoiceTemplate = ejs.compile(ejsChoiceString);
+        const optionChoiceTemplate = ejs.compile(ejsChoiceString);
 
-          const optionConstructor = (template, selectorData) =>
-            stringToElement(template(selectorData));
+        const optionConstructor = (template, selectorData) =>
+          stringToElement(template(selectorData));
 
-          const { itemSelectText } = this.config;
+        const { itemSelectText } = this.config;
 
-          return {
-            choices: normalizedCountryChoices,
-            item: function (classNames, data) {
-              return optionConstructor(optionItemTemplate, {
-                classNames,
-                data,
-              });
-            },
-            choice: function (classNames, data) {
-              return optionConstructor(optionChoiceTemplate, {
-                classNames,
-                data: {
-                  ...data,
-                  itemSelectText,
-                },
-              });
-            },
-          };
-        },
-      })
-  );
+        return {
+          choices: normalizedCountryChoices,
+          item: function (classNames, data) {
+            console.log(data);
+            return optionConstructor(optionItemTemplate, {
+              classNames,
+              data,
+            });
+          },
+          choice: function (classNames, data) {
+            console.log(data);
+            return optionConstructor(optionChoiceTemplate, {
+              classNames,
+              data: {
+                ...data,
+                itemSelectText,
+              },
+            });
+          },
+        };
+      },
+    })
+);

@@ -1,9 +1,0 @@
-<select
-  name="country-selector"
-  class="country-selector"
-  id="country-selector-<%%= direction %>"
->
-  <% countries.forEach(function ({iso3, iso2, name}) { %>
-  <option value="<%= iso3 %>"><%- JSON.stringify({iso2, name}) %></option>
-  <% }); %>
-</select>

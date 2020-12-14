@@ -17,12 +17,10 @@
 
   const fs = require("fs");
 
-  const countryData = require("./countryData.json");
-
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "/public/views"));
 
-  app.render(
+  /*app.render(
     "partials/converter-form/country-selector-template.ejs",
     countryData,
     (error, html) => {
@@ -40,7 +38,7 @@
         html
       );
     }
-  );
+  );*/
 
   /**
    * Route middleware / controllers
