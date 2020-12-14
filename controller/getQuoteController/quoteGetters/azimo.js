@@ -1,4 +1,8 @@
 "use strict";
+
+const axios = require("axios");
+const { createHandler, signatureHandler } = require("../../../util");
+
 // 0. => <SENDER_COUNTRY>, <RECIPIENT_COUNTRY>, <RECIPIENT_CURRENCY>, <SENDER_AMOUNT>
 //
 // 1. Request to https://azimo.com/en/rest/sendingCountryConfigs/<SENDER_COUNTRY>?payoutCountryIso3Code=<RECIPIENT_COUNTRY>
@@ -38,11 +42,9 @@
 //
 // 6. => <SENDER_AMOUNT> * <EXCHANGE_RATE>
 // => <RECIPIENT_AMOUNT>
-
-const axios = require("axios");
-const { handle, signatureHandler } = require("../util");
-
 module.exports = async (queryConfig) => {
+  const handle = createHandler("azimo");
+
   const {
     senderCountry,
     recipientCountry,
@@ -50,7 +52,7 @@ module.exports = async (queryConfig) => {
     senderAmount,
   } = signatureHandler(queryConfig);
 
-  console.log("AZIMO PAYLOAD:", {
+  console.log("[util][azimo][handle] Payload:", {
     senderCountry,
     recipientCountry,
     recipientCurrency,
@@ -78,6 +80,7 @@ module.exports = async (queryConfig) => {
   // TODO: if (value inside, maybe check for array length?)
   const senderConfig = handle(
     configData[0],
+    "Sender country config:",
     new Error("COUNTRY_PAIR_NOT_FOUND.AZIMO"),
     configData
   );
@@ -85,12 +88,14 @@ module.exports = async (queryConfig) => {
   // TODO: check error messages/codes
   const senderCurrency = handle(
     senderConfig["currencyIso3Code"],
+    "Sender currency:",
     new Error("SENDER_NOT_FOUND.AZIMO"),
     senderConfig
   );
 
   const recipientConfig = handle(
     senderConfig["payoutCountryConfigs"][0],
+    "Recipient country config:",
     new Error("RECIPIENT_NOT_FOUND.AZIMO"),
     senderConfig
   );
@@ -99,42 +104,38 @@ module.exports = async (queryConfig) => {
     recipientConfig["currencies"].find(
       (currency) => currency["iso3Code"] === recipientCurrency
     ),
+    "Recipient currency config:",
     new Error("RECIPIENT_NOT_FOUND.AZIMO"),
     recipientConfig
   );
 
-  recipientCurrency = handle(
+  const finalRecipientCurrency = handle(
     recipientCurrencyConfig["iso3Code"],
+    "Final recipient currency:",
     new Error("RECIPIENT_NOT_FOUND.AZIMO"),
     recipientCurrencyConfig
   );
-
-  console.log("ALA BLAAAAA NUUUU", recipientCurrency);
 
   const deliveryMethods = handle(
     recipientCurrencyConfig["deliveryMethods"].find(
       (deliveryMethod) => deliveryMethod.type === "SWIFT"
     ) || recipientCurrencyConfig["deliveryMethods"][0],
+    "Delivery methods:",
     new Error("DELIVERY_METHOD_TO_RECIPIENT_NOT_FOUND.AZIMO"),
     recipientCurrencyConfig
   );
 
-  console.log("y8hihuibuibiubiWF", deliveryMethods);
-
   const deliveryMethod = handle(
     deliveryMethods.type,
+    "Chosen delivery method:",
     new Error("DELIVERY_METHOD_TO_RECIPIENT_NOT_FOUND.AZIMO"),
     deliveryMethods
   );
 
-  console.log("U(*FJWEFJ(EWFICENEIWF", deliveryMethod);
-
   const ratesRequestOptions = {
     baseURL: "https://api.azimo.com/service-rates/v1/public/prices",
-    url: `/current?sendingCountry=${senderCountry}&sendingCurrency=${senderCurrency}&receivingCountry=${recipientCountry}&receivingCurrency=${recipientCurrency}&deliveryMethod=${deliveryMethod}`,
+    url: `/current?sendingCountry=${senderCountry}&sendingCurrency=${senderCurrency}&receivingCountry=${recipientCountry}&receivingCurrency=${finalRecipientCurrency}&deliveryMethod=${deliveryMethod}`,
   };
-
-  console.log("OIEJEWFIOWEKFIOKEWFOWEKF", ratesRequestOptions);
 
   const {
     data: { rates: rateData },
@@ -149,6 +150,7 @@ module.exports = async (queryConfig) => {
   // TODO: sort rates by lowest instead of rateData[0]
   const exchangeRate = handle(
     rateData[0].rate,
+    "Exchange rate:",
     new Error("RATE_NOT_FOUND.AZIMO"),
     rateData
   );

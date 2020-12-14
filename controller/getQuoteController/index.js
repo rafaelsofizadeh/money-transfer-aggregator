@@ -1,10 +1,12 @@
-module.exports = ({
+const {
   transferwiseGetQuote,
   skrillGetQuote,
   spokoGetQuote,
   easysendGetQuote,
   azimoGetQuote,
-}) => async (request, response) => {
+} = await require("./quoteGetters");
+
+module.exports = async (request, response) => {
   const { queryConfig } = response.locals;
 
   // DETERMINE / TODO: Does .allSettled collect rejected promises, too?

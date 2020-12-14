@@ -1,4 +1,8 @@
 "use strict";
+
+const axios = require("axios");
+const { createHandler, signatureHandler } = require("../../../util");
+
 // 0. => <SENDER_COUNTRY>, <SENDER_CURRENCY>, <RECIPIENT_COUNTRY>, <RECIPIENT_CURRENCY>, <SENDER_AMOUNT>
 //
 // 1. <RECIPIENT_COUNTRY>, <SENDER_COUNTRY> iso3 => iso2
@@ -40,11 +44,9 @@
 //
 // 7. (<SENDER_AMOUNT> - (if <FEE_AMOUNT> is <SENDER_CURRENCY>)) * <EXCHANGE_RATE> - (if <FEE_AMOUNT> is <RECIPIENT_CURRENCY>)
 // => <RECIPIENT_AMOUNT>
-
-const axios = require("axios");
-const { handle, signatureHandler } = require("../util");
-
 module.exports = async (queryConfig) => {
+  const handle = createHandler("easysend");
+
   const {
     senderCountry,
     senderCurrency,
@@ -81,6 +83,7 @@ module.exports = async (queryConfig) => {
 
   const transferTypes = handle(
     result["transfer_types"],
+    "Transfer types:",
     new Error("DELIVERY_METHOD_TO_RECIPIENT_NOT_FOUND.EASYSEND"),
     result
   );
@@ -91,12 +94,14 @@ module.exports = async (queryConfig) => {
   );
   const transferType = handle(
     foundDefaultTransferType || transferTypes[0],
+    "Chosen transfer type:",
     new Error("DELIVERY_METHOD_TO_RECIPIENT_NOT_FOUND.EASYSEND"),
     result
   );
 
   const exchangeRate = handle(
     parseFloat(result["exchange_rate"]?.["calc_rate"]),
+    "Exchange rate:",
     new Error("RATE_NOT_FOUND.EASYSEND"),
     result
   );
@@ -108,6 +113,7 @@ module.exports = async (queryConfig) => {
   // DETERMINE: Error code
   const feeAmount = handle(
     fee.value.amount,
+    "Fee amount:",
     new Error("SERVICE_ERROR.EASYSEND"),
     fee
   );

@@ -1,13 +1,13 @@
 "use strict";
 const axios = require("axios");
-const { signatureHandler } = require("../util");
+const { signatureHandler } = require("../../../util");
 
 module.exports = async (queryConfig, sandbox = true) => {
   const { senderCurrency, recipientCurrency, senderAmount } = signatureHandler(
     queryConfig
   );
 
-  console.log("TRANSFERWISE PAYLOAD:", {
+  console.log("[transferwise] Payload:", {
     senderCurrency,
     recipientCurrency,
     senderAmount,
@@ -34,8 +34,8 @@ module.exports = async (queryConfig, sandbox = true) => {
 
   // DETERMINE / TODO: How to reject a promise here (in an async/await function)? Does throwing an error cause a promise rejection?
   const { data: result } = await axios(requestOptions).catch((error) => {
-    console.log(error);
-    console.log(requestOptions);
+    console.log("[transferwise] Error:", error);
+    console.log("[transferwise] Request options:", requestOptions);
     throw error;
   });
 

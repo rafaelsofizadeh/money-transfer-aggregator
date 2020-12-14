@@ -3,14 +3,22 @@ const cuc = require("currency-codes");
 // Countries
 const coc = require("country-code-lookup");
 
-module.exports = function (request, response, next) {
+module.exports = (request, response, next) => {
+  const argumentsCarrier = request.body;
+
+  if (!Object.keys(argumentsCarrier).length) {
+    return next(new Error("Query must not be empty."));
+  }
+
   const {
     senderCurrency,
     senderCountry,
     recipientCurrency,
     recipientCountry,
     senderAmount,
-  } = request.query;
+  } = argumentsCarrier;
+
+  console.log("[processInput] Input query:", argumentsCarrier);
 
   const [
     senderCurrencyObj,
@@ -50,6 +58,8 @@ module.exports = function (request, response, next) {
     recipientCountry: recipientCountryObj,
     senderAmount: parsedAmount,
   };
+
+  console.log("[processInput] Output query:", response.locals.queryConfig);
 
   return next();
 };

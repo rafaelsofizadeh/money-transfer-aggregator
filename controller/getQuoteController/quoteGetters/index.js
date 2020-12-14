@@ -28,7 +28,7 @@ module.exports = (async () => {
     browser,
     {
       senderCurrency: "sourceCurrency",
-      ecipientCurrency: "destinationCurrency",
+      recipientCurrency: "destinationCurrency",
       senderAmount: "sourceAmount",
     },
     undefined,

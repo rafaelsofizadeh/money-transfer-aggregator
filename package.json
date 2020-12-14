@@ -19,9 +19,14 @@
   "dependencies": {
     "@babel/cli": "^7.12.0",
     "axios": "^0.20.0",
+    "choices.js": "^9.0.1",
     "country-code-lookup": "0.0.18",
     "currency-codes": "^2.1.0",
+    "ejs": "^3.1.5",
     "express": "^4.17.1",
+    "express-handlebars": "^5.2.0",
+    "flag-icon-css": "^3.5.0",
+    "handlebars": "^4.7.6",
     "puppeteer": "^5.3.1"
   }
 }
