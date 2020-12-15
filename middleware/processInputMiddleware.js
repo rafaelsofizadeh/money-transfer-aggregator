@@ -20,6 +20,25 @@ module.exports = (request, response, next) => {
 
   console.log("[processInput] Input query:", argumentsCarrier);
 
+  if (
+    !senderCurrency ||
+    !senderCountry ||
+    !recipientCurrency ||
+    !recipientCountry
+  ) {
+    response.status(400);
+    return next(
+      new Error(
+        "Incomplete request body. Payload should include [senderCurrency, senderCountry, recipientCurrency, recipientCountry]."
+      )
+    );
+  }
+
+  if (isNaN(senderAmount)) {
+    response.status(400);
+    return next(new TypeError("Amount should be a float number."));
+  }
+
   const [
     senderCurrencyObj,
     senderCountryObj,
@@ -42,11 +61,6 @@ module.exports = (request, response, next) => {
   if (!senderCurrencyObj || !recipientCurrencyObj) {
     response.status(400);
     return next(new TypeError("Please enter a valid ISO 4217 currency code."));
-  }
-
-  if (isNaN(senderAmount)) {
-    response.status(400);
-    return next(new TypeError("Amount should be a float number."));
   }
 
   const parsedAmount = parseFloat(parseFloat(senderAmount).toFixed(2));

@@ -1,0 +1,28 @@
+<fieldset id="amount-input-set--<%= direction %>" class="amount-input-set">
+  <legend class="align-with-form">
+    <%= direction === "sender" ? "Вы отправляете" : "Получают" %>:
+  </legend>
+  <section class="amount-input__container--left">
+    <div
+      class="amount-input__wrapper input-wrapper input-wrapper--overflow amount-input__wrapper--left"
+    >
+      <input
+        type="number"
+        id="amount-input--<%= direction %>"
+        class="amount-input"
+      />
+    </div>
+  </section>
+  <section class="amount-input__container--right">
+    <div
+      class="amount-input__wrapper input-wrapper input-wrapper--overflow amount-input__wrapper--right"
+    >
+      <select
+        id="amount-input__currency-selector--<%= direction %>"
+        class="amount-input__currency-selector"
+      >
+        <option disabled selected>Валюта</option>
+      </select>
+    </div>
+  </section>
+</fieldset>

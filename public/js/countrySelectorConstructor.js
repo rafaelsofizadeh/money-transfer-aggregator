@@ -1,13 +1,5 @@
 const countryChoices = [
   {
-    name: "Абхазия",
-    fullname: "Республика Абхазия",
-    english: "Abkhazia",
-    iso2: "AB",
-    iso3: "ABH",
-    iso: "895",
-  },
-  {
     name: "Австралия",
     fullname: "",
     english: "Australia",
@@ -48,14 +40,6 @@ const countryChoices = [
     iso: "012",
   },
   {
-    name: "Американское Самоа",
-    fullname: "",
-    english: "American Samoa",
-    iso2: "AS",
-    iso3: "ASM",
-    iso: "016",
-  },
-  {
     name: "Ангилья",
     fullname: "",
     english: "Anguilla",
@@ -78,14 +62,6 @@ const countryChoices = [
     iso2: "AD",
     iso3: "AND",
     iso: "020",
-  },
-  {
-    name: "Антарктида",
-    fullname: "",
-    english: "Antarctica",
-    iso2: "AQ",
-    iso3: "ATA",
-    iso: "010",
   },
   {
     name: "Антигуа и Барбуда",
@@ -208,20 +184,12 @@ const countryChoices = [
     iso: "100",
   },
   {
-    name: "Боливия, Многонациональное Государство",
+    name: "Боливия",
     fullname: "Многонациональное Государство Боливия",
     english: "Bolivia, plurinational state of",
     iso2: "BO",
     iso3: "BOL",
     iso: "068",
-  },
-  {
-    name: "Бонайре, Саба и Синт-Эстатиус",
-    fullname: "",
-    english: "Bonaire, Sint Eustatius and Saba",
-    iso2: "BQ",
-    iso3: "BES",
-    iso: "535",
   },
   {
     name: "Босния и Герцеговина",
@@ -246,14 +214,6 @@ const countryChoices = [
     iso2: "BR",
     iso3: "BRA",
     iso: "076",
-  },
-  {
-    name: "Британская территория в Индийском океане",
-    fullname: "",
-    english: "British Indian Ocean Territory",
-    iso2: "IO",
-    iso3: "IOT",
-    iso: "086",
   },
   {
     name: "Бруней-Даруссалам",
@@ -304,7 +264,7 @@ const countryChoices = [
     iso: "348",
   },
   {
-    name: "Венесуэла Боливарианская Республика",
+    name: "Венесуэла",
     fullname: "Боливарийская Республика Венесуэла",
     english: "Venezuela",
     iso2: "VE",
@@ -496,14 +456,6 @@ const countryChoices = [
     iso: "208",
   },
   {
-    name: "Джерси",
-    fullname: "",
-    english: "Jersey",
-    iso2: "JE",
-    iso3: "JEY",
-    iso: "832",
-  },
-  {
     name: "Джибути",
     fullname: "Республика Джибути",
     english: "Djibouti",
@@ -600,7 +552,7 @@ const countryChoices = [
     iso: "368",
   },
   {
-    name: "Иран, Исламская Республика",
+    name: "Иран",
     fullname: "Исламская Республика Иран",
     english: "Iran, Islamic Republic of",
     iso2: "IR",
@@ -768,7 +720,7 @@ const countryChoices = [
     iso: "178",
   },
   {
-    name: "Конго, Демократическая Республика",
+    name: "Конго",
     fullname: "Демократическая Республика Конго",
     english: "Congo, Democratic Republic of the",
     iso2: "CD",
@@ -776,7 +728,7 @@ const countryChoices = [
     iso: "180",
   },
   {
-    name: "Корея, Народно-Демократическая Республика",
+    name: "КНДР",
     fullname: "Корейская Народно-Демократическая Республика",
     english: "Korea, Democratic People's republic of",
     iso2: "KP",
@@ -784,7 +736,7 @@ const countryChoices = [
     iso: "408",
   },
   {
-    name: "Корея, Республика",
+    name: "Республика Корея",
     fullname: "Республика Корея",
     english: "Korea, Republic of",
     iso2: "KR",
@@ -864,7 +816,7 @@ const countryChoices = [
     iso: "422",
   },
   {
-    name: "Ливийская Арабская Джамахирия",
+    name: "Ливия",
     fullname: "Социалистическая Народная Ливийская Арабская Джамахирия",
     english: "Libyan Arab Jamahiriya",
     iso2: "LY",
@@ -2013,6 +1965,259 @@ const countryChoices = [
   },
 ];
 
+const iso2ToCurrency = {
+  BD: "BDT",
+  BE: "EUR",
+  BF: "XOF",
+  BG: "BGN",
+  BA: "BAM",
+  BB: "BBD",
+  WF: "XPF",
+  BL: "EUR",
+  BM: "BMD",
+  BN: "BND",
+  BO: "BOB",
+  BH: "BHD",
+  BI: "BIF",
+  BJ: "XOF",
+  BT: "BTN",
+  JM: "JMD",
+  BV: "NOK",
+  BW: "BWP",
+  WS: "WST",
+  BQ: "USD",
+  BR: "BRL",
+  BS: "BSD",
+  JE: "GBP",
+  BY: "BYR",
+  BZ: "BZD",
+  RU: "RUB",
+  RW: "RWF",
+  RS: "RSD",
+  TL: "USD",
+  RE: "EUR",
+  TM: "TMT",
+  TJ: "TJS",
+  RO: "RON",
+  TK: "NZD",
+  GW: "XOF",
+  GU: "USD",
+  GT: "GTQ",
+  GS: "GBP",
+  GR: "EUR",
+  GQ: "XAF",
+  GP: "EUR",
+  JP: "JPY",
+  GY: "GYD",
+  GG: "GBP",
+  GF: "EUR",
+  GE: "GEL",
+  GD: "XCD",
+  GB: "GBP",
+  GA: "XAF",
+  SV: "USD",
+  GN: "GNF",
+  GM: "GMD",
+  GL: "DKK",
+  GI: "GIP",
+  GH: "GHS",
+  OM: "OMR",
+  TN: "TND",
+  JO: "JOD",
+  HR: "HRK",
+  HT: "HTG",
+  HU: "HUF",
+  HK: "HKD",
+  HN: "HNL",
+  HM: "AUD",
+  VE: "VEF",
+  PR: "USD",
+  PS: "ILS",
+  PW: "USD",
+  PT: "EUR",
+  SJ: "NOK",
+  PY: "PYG",
+  IQ: "IQD",
+  PA: "PAB",
+  PF: "XPF",
+  PG: "PGK",
+  PE: "PEN",
+  PK: "PKR",
+  PH: "PHP",
+  PN: "NZD",
+  PL: "PLN",
+  PM: "EUR",
+  ZM: "ZMK",
+  EH: "MAD",
+  EE: "EUR",
+  EG: "EGP",
+  ZA: "ZAR",
+  EC: "USD",
+  IT: "EUR",
+  VN: "VND",
+  SB: "SBD",
+  ET: "ETB",
+  SO: "SOS",
+  ZW: "ZWL",
+  SA: "SAR",
+  ES: "EUR",
+  ER: "ERN",
+  ME: "EUR",
+  MD: "MDL",
+  MG: "MGA",
+  MF: "EUR",
+  MA: "MAD",
+  MC: "EUR",
+  UZ: "UZS",
+  MM: "MMK",
+  ML: "XOF",
+  MO: "MOP",
+  MN: "MNT",
+  MH: "USD",
+  MK: "MKD",
+  MU: "MUR",
+  MT: "EUR",
+  MW: "MWK",
+  MV: "MVR",
+  MQ: "EUR",
+  MP: "USD",
+  MS: "XCD",
+  MR: "MRO",
+  IM: "GBP",
+  UG: "UGX",
+  TZ: "TZS",
+  MY: "MYR",
+  MX: "MXN",
+  IL: "ILS",
+  FR: "EUR",
+  IO: "USD",
+  SH: "SHP",
+  FI: "EUR",
+  FJ: "FJD",
+  FK: "FKP",
+  FM: "USD",
+  FO: "DKK",
+  NI: "NIO",
+  NL: "EUR",
+  NO: "NOK",
+  NA: "NAD",
+  VU: "VUV",
+  NC: "XPF",
+  NE: "XOF",
+  NF: "AUD",
+  NG: "NGN",
+  NZ: "NZD",
+  NP: "NPR",
+  NR: "AUD",
+  NU: "NZD",
+  CK: "NZD",
+  XK: "EUR",
+  CI: "XOF",
+  CH: "CHF",
+  CO: "COP",
+  CN: "CNY",
+  CM: "XAF",
+  CL: "CLP",
+  CC: "AUD",
+  CA: "CAD",
+  CG: "XAF",
+  CF: "XAF",
+  CD: "CDF",
+  CZ: "CZK",
+  CY: "EUR",
+  CX: "AUD",
+  CR: "CRC",
+  CW: "ANG",
+  CV: "CVE",
+  CU: "CUP",
+  SZ: "SZL",
+  SY: "SYP",
+  SX: "ANG",
+  KG: "KGS",
+  KE: "KES",
+  SS: "SSP",
+  SR: "SRD",
+  KI: "AUD",
+  KH: "KHR",
+  KN: "XCD",
+  KM: "KMF",
+  ST: "STD",
+  SK: "EUR",
+  KR: "KRW",
+  SI: "EUR",
+  KP: "KPW",
+  KW: "KWD",
+  SN: "XOF",
+  SM: "EUR",
+  SL: "SLL",
+  SC: "SCR",
+  KZ: "KZT",
+  KY: "KYD",
+  SG: "SGD",
+  SE: "SEK",
+  SD: "SDG",
+  DO: "DOP",
+  DM: "XCD",
+  DJ: "DJF",
+  DK: "DKK",
+  VG: "USD",
+  DE: "EUR",
+  YE: "YER",
+  DZ: "DZD",
+  US: "USD",
+  UY: "UYU",
+  YT: "EUR",
+  UM: "USD",
+  LB: "LBP",
+  LC: "XCD",
+  LA: "LAK",
+  TV: "AUD",
+  TW: "TWD",
+  TT: "TTD",
+  TR: "TRY",
+  LK: "LKR",
+  LI: "CHF",
+  LV: "EUR",
+  TO: "TOP",
+  LT: "LTL",
+  LU: "EUR",
+  LR: "LRD",
+  LS: "LSL",
+  TH: "THB",
+  TF: "EUR",
+  TG: "XOF",
+  TD: "XAF",
+  TC: "USD",
+  LY: "LYD",
+  VA: "EUR",
+  VC: "XCD",
+  AE: "AED",
+  AD: "EUR",
+  AG: "XCD",
+  AF: "AFN",
+  AI: "XCD",
+  VI: "USD",
+  IS: "ISK",
+  IR: "IRR",
+  AM: "AMD",
+  AL: "ALL",
+  AO: "AOA",
+  AQ: "",
+  AS: "USD",
+  AR: "ARS",
+  AU: "AUD",
+  AT: "EUR",
+  AW: "AWG",
+  IN: "INR",
+  AX: "EUR",
+  AZ: "AZN",
+  IE: "EUR",
+  ID: "IDR",
+  UA: "UAH",
+  QA: "QAR",
+  MZ: "MZN",
+};
+
 const normalizedCountryChoices = countryChoices.map(({ name, iso2, iso3 }) => ({
   value: iso3,
   label: name,
@@ -2025,11 +2230,10 @@ const selectElements = Array.from(
   document.getElementsByClassName("country-selector")
 );
 
-selectElements.map(
+const newSelectElements = selectElements.map(
   (selectElement) =>
     new Choices(selectElement, {
       choices: normalizedCountryChoices,
-      itemSelectText: "Нажмите для выбора",
       callbackOnCreateTemplates: function (stringToElement) {
         const ejsItemString = `<div
             class="<%= classNames.item %> <%= data.highlighted ? classNames.highlightedState : classNames.itemSelectable %>" 
@@ -2046,7 +2250,6 @@ selectElements.map(
         const ejsChoiceString = `<div 
             class="<%= classNames.item %> <%= classNames.itemSelectable %>" 
             data-choice 
-            data-select-text="<%= data.itemSelectText %>" 
             data-id="<%= data.id %>" 
             data-value="<%= data.value %>" 
             data-choice-selectable 
@@ -2062,28 +2265,55 @@ selectElements.map(
         const optionConstructor = (template, selectorData) =>
           stringToElement(template(selectorData));
 
-        const { itemSelectText } = this.config;
-
         return {
           choices: normalizedCountryChoices,
           item: function (classNames, data) {
-            console.log(data);
             return optionConstructor(optionItemTemplate, {
               classNames,
               data,
             });
           },
           choice: function (classNames, data) {
-            console.log(data);
             return optionConstructor(optionChoiceTemplate, {
               classNames,
-              data: {
-                ...data,
-                itemSelectText,
-              },
+              data,
             });
           },
         };
       },
+      classNames: {
+        containerOuter: "choices input-wrapper input-wrapper--full",
+      },
     })
 );
+
+const currencySelectors = Object.fromEntries(
+  ["sender", "recipient"].map((direction) => [
+    direction,
+    document.getElementById(`amount-input__currency-selector--${direction}`),
+  ])
+);
+
+newSelectElements.forEach((element) => {
+  const originElement = element.passedElement.element;
+
+  originElement.addEventListener("choice", (event) => {
+    const direction = originElement.getAttribute("data-direction");
+    const countryIso3 = originElement.value;
+    const { countryIso2 } = event.detail.choice.customProperties;
+    const currencyCode = iso2ToCurrency[countryIso2];
+
+    Object.assign(window.getQuoteRequestPayload, {
+      [direction + "Country"]: countryIso3,
+    });
+    Object.assign(window.getQuoteRequestPayload, {
+      [direction + "Currency"]: currencyCode,
+    });
+
+    console.log(currencySelectors);
+    currencySelectors[
+      direction
+    ].innerHTML = `<option value="${currencyCode}">${currencyCode}</option>`;
+  }),
+    false;
+});

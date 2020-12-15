@@ -1,4 +1,4 @@
-(async () => {
+(async function () {
   const path = require("path");
   const express = require("express");
   const app = express();
@@ -20,39 +20,19 @@
   app.set("view engine", "ejs");
   app.set("views", path.join(__dirname, "/public/views"));
 
-  /*app.render(
-    "partials/converter-form/country-selector-template.ejs",
-    countryData,
-    (error, html) => {
-      if (error) {
-        return console.log(
-          `[index] Country selector template rendering error: ${error}`
-        );
-      }
-
-      fs.writeFileSync(
-        path.join(
-          __dirname,
-          "/public/views/partials/converter-form/country-selector.ejs"
-        ),
-        html
-      );
-    }
-  );*/
-
   /**
    * Route middleware / controllers
    */
 
   const inputProcessingMiddleware = require("./middleware/processInputMiddleware");
 
-  //const getQuoteController = await require("./controller/getQuoteController");
-  const getQuoteTestController = require("./controller/getQuoteController/test");
+  const getQuoteController = await require("./controller/getQuoteController");
+  // const getQuoteTestController = require("./controller/getQuoteController/test");
 
   app.get("/", (request, response) => {
     return response.render("pages/main.ejs");
   });
-  app.post("/getQuote", inputProcessingMiddleware, getQuoteTestController);
+  app.post("/getQuote", inputProcessingMiddleware, getQuoteController);
 
   /**
    * Bootstrap

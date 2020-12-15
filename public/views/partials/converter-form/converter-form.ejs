@@ -1,9 +1,89 @@
-<link rel="stylesheet" type="text/css" href="../../../css/choices.min.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/choices.css" />
 <link rel="stylesheet" type="text/css" href="../../../css/flags.css" />
+<link rel="stylesheet" type="text/css" href="../../../css/converter-form.css" />
 
-<%- include('./country-selector.ejs', {direction: "send"}) %> <%-
-include('./country-selector.ejs', {direction: "receive"}) %>
+<div class="converter-form">
+  <div class="converter-form__main">
+    <div class="converter-form__main__input">
+      <%- include('./country-selector.ejs', { direction: "sender" }) %>
+    </div>
+    <div class="converter-form__main__input">
+      <%- include('./country-selector.ejs', { direction: "recipient" }) %>
+    </div>
+    <div class="converter-form__main__input">
+      <%- include('./amount-input.ejs', { direction: "sender" }) %>
+    </div>
+    <div class="converter-form__main__input">
+      <%- include('./amount-input.ejs', { direction: "recipient" }) %>
+    </div>
+    <div class="input-wrapper--overflow input-wrapper--full">
+      <button type="button" id="converter-form__main__button">Сравнить</button>
+    </div>
+  </div>
+  <div class="converter-form__settings">
+    <h3>Дополнительные настройки:</h3>
+    <ul id="converter-form__settings--root">
+      <li>
+        <input
+          type="radio"
+          name="converter-form__settings__input"
+          id="converter-form__settings__input--new-client"
+          value="newClient"
+        />
+        <label for="converter-form__settings__input--new-client">
+          <span class="converter-form__settings__input__label--main">
+            Для новых клиентов.
+          </span>
+          <span class="converter-form__settings__input__label--sub">
+            (в этом случае будут учтены все бонусные предложение сервсов,
+            исключая денежный бонус за регистрацию по приглашению.)
+          </span>
+        </label>
+        <ul class="converter-form__settings--sub">
+          <li>
+            <input
+              type="checkbox"
+              name="converter-form__settings__input"
+              id="converter-form__settings__input--new-client"
+              value="newClient"
+            />
+            <label for="converter-form__settings__input--new-client">
+              <span class="converter-form__settings__input__label--main">
+                Для новых клиентов.
+              </span>
+              <span class="converter-form__settings__input__label--sub">
+                (в этом случае будут учтены все бонусные предложение сервсов,
+                исключая денежный бонус за регистрацию по приглашению.)
+              </span>
+            </label>
+          </li>
+        </ul>
+      </li>
+      <li>
+        <input
+          type="radio"
+          name="converter-form__settings__input"
+          id="converter-form__settings__input--standard"
+          value="standard"
+          checked
+        />
+        <label for="converter-form__settings__input--standard">
+          <span class="converter-form__settings__input__label--main">
+            Для новых клиентов.
+          </span>
+          <span class="converter-form__settings__input__label--sub">
+            (в этом случае будут учтены все бонусные предложение сервсов,
+            исключая денежный бонус за регистрацию по приглашению.)
+          </span>
+        </label>
+      </li>
+    </ul>
+  </div>
+</div>
 
 <script src="../../js/ejs.min.js"></script>
 <script src="../../js/choices.min.js"></script>
+<script src="../../js/util.js"></script>
 <script src="../../js/countrySelectorConstructor.js"></script>
+<script src="../../js/amountInput.js"></script>
+<script src="../../js/getQuoteRequest.js"></script>
