@@ -1,6 +1,6 @@
-const { response } = require("express");
+import { response } from "express";
 
-module.exports = (request, response) =>
+export default (request, response) =>
   response.type("json").send(
     JSON.stringify(
       {

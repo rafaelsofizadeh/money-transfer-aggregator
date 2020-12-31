@@ -1,7 +1,8 @@
 "use strict";
 
-const axios = require("axios");
-const { createHandler, signatureHandler } = require("../../../util");
+import axios from "axios";
+
+import { createHandler, signatureHandler } from "../../../util.js";
 
 // 0. => <SENDER_COUNTRY>, <SENDER_CURRENCY>, <RECIPIENT_COUNTRY>, <RECIPIENT_CURRENCY>, <SENDER_AMOUNT>
 //
@@ -44,90 +45,61 @@ const { createHandler, signatureHandler } = require("../../../util");
 //
 // 7. (<SENDER_AMOUNT> - (if <FEE_AMOUNT> is <SENDER_CURRENCY>)) * <EXCHANGE_RATE> - (if <FEE_AMOUNT> is <RECIPIENT_CURRENCY>)
 // => <RECIPIENT_AMOUNT>
-module.exports = async (queryConfig) => {
-  const handle = createHandler("easysend");
-
+export default async (query) => {
   const {
     senderCountry,
     senderCurrency,
     recipientCountry,
     recipientCurrency,
     senderAmount,
-  } = signatureHandler(queryConfig, undefined, "iso2");
-
-  console.log("EASYSEND PAYLOAD:", {
-    senderCountry,
-    senderCurrency,
-    recipientCountry,
-    recipientCurrency,
-    senderAmount,
-  });
+  } = signatureHandler(query, undefined, "iso2");
 
   const formattedSenderAmount = (senderAmount * 100).toString();
-  const requestOptions = {
-    baseURL: "https://www.easysend.pl/api/v2/public/offers",
-    url: `/${senderCountry}/${senderCurrency}/${recipientCountry}/${recipientCurrency}/${formattedSenderAmount}`,
-  };
 
   const {
     data: {
-      data: { attributes: result },
+      data: {
+        attributes: {
+          transfer_types: transferTypes,
+          default_transfer_type: defaultTransferType,
+          exchange_rate: { calc_rate: exchangeRate },
+        },
+      },
     },
-  } = await axios(requestOptions).catch((error) => {
-    console.log(error);
-    console.log(requestOptions);
-    // TODO: test Azimo error messages. Maybe there's a more granular message
-    // possible than 'invalid country pair' (e.g. 'invalid sender/recipient country')
-    throw error; //new Error("[SENDER, RECIPIENT, AMOUNT]_TUPLE_NOT_FOUND.EASYSEND");
-  });
+  } = await axios
+    .get(
+      `https://www.easysend.pl/api/v2/public/offers/${senderCountry}/${senderCurrency}/${recipientCountry}/${recipientCurrency}/${formattedSenderAmount}`
+    )
+    .catch((error) => {
+      console.log("[easysend][axios] Request error:", error);
+      // TODO: test Easysend error messages. Maybe there's a more granular message
+      // possible than 'invalid country pair' (e.g. 'invalid sender/recipient country')
+      throw new Error(
+        "Sender-recipient-amount method combination not supported"
+      );
+    });
 
-  const transferTypes = handle(
-    result["transfer_types"],
-    "Transfer types:",
-    new Error("DELIVERY_METHOD_TO_RECIPIENT_NOT_FOUND.EASYSEND"),
-    result
-  );
-
-  const defaultTransferType = result["default_transfer_type"];
-  const foundDefaultTransferType = transferTypes.find(
-    (transferType) => transferType.name === defaultTransferType
-  );
-  const transferType = handle(
-    foundDefaultTransferType || transferTypes[0],
-    "Chosen transfer type:",
-    new Error("DELIVERY_METHOD_TO_RECIPIENT_NOT_FOUND.EASYSEND"),
-    result
-  );
-
-  const exchangeRate = handle(
-    parseFloat(result["exchange_rate"]?.["calc_rate"]),
-    "Exchange rate:",
-    new Error("RATE_NOT_FOUND.EASYSEND"),
-    result
-  );
+  const {
+    // TODO: sort fees by lowest instead of fee[0]
+    fee: [
+      {
+        value: { amount: feeAmount, currency: feeCurrency },
+      },
+    ],
+  } =
+    transferTypes.find(
+      (transferType) => transferType.name === defaultTransferType
+    ) || transferTypes[0];
 
   const recipientAmount = senderAmount * exchangeRate;
-
-  // TODO: sort fees by lowest instead of fee[0]
-  const fee = transferType.fee[0];
-  // DETERMINE: Error code
-  const feeAmount = handle(
-    fee.value.amount,
-    "Fee amount:",
-    new Error("SERVICE_ERROR.EASYSEND"),
-    fee
-  );
 
   const recipientAmountFinal = parseFloat(
     (
       recipientAmount -
       (parseInt(feeAmount) / 100) *
-        (fee.value.currency === senderCurrency ? exchangeRate : 1)
+        (feeCurrency === senderCurrency ? exchangeRate : 1)
     ).toFixed(2)
   );
 
-  return {
-    name: "easysend",
-    result: recipientAmountFinal,
-  };
+  return recipientAmountFinal;
 };

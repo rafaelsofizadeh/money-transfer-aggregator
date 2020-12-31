@@ -1,37 +1,42 @@
-module.exports = (async () => {
-  const {
-    transferwiseGetQuote,
-    skrillGetQuote,
-    spokoGetQuote,
-    easysendGetQuote,
-    azimoGetQuote,
-  } = await require("./quoteGetters");
+import azimoGetQuote from "./quoteGetters/azimo.js";
+import transferwiseGetQuote from "./quoteGetters/transferwise.js";
+import easysendGetQuote from "./quoteGetters/easysend.js";
+
+import spokoConstructor from "./quoteGetters/spoko.js";
+import skrillConstructor from "./quoteGetters/skrill.js";
+
+import { standardHandle, timeout } from "../../util.js";
+
+export default async (browser) => {
+  // const spokoGetQuote = await spokoConstructor(browser);
+  const skrillGetQuote = await skrillConstructor(browser);
+
+  const quoteGetters = [
+    /*{ quoteGetter: azimoGetQuote, name: "azimo" },
+    { quoteGetter: transferwiseGetQuote, name: "transferwise" },
+    { quoteGetter: easysendGetQuote, name: "easysend" },
+    { quoteGetter: spokoGetQuote, name: "spoko" },*/
+    { quoteGetter: skrillGetQuote, name: "skrill" },
+  ];
 
   return async (request, response) => {
-    const { queryConfig } = response.locals;
+    const { query } = response.locals;
 
-    // DETERMINE / TODO: Does .allSettled collect rejected promises, too?
-    // What to do with rejected promises?
-    return Promise.allSettled([
-      transferwiseGetQuote(queryConfig),
-      skrillGetQuote(queryConfig),
-      easysendGetQuote(queryConfig),
-      spokoGetQuote(queryConfig),
-      azimoGetQuote(queryConfig),
-    ]).then(([transferwise, skrill, easysend, spoko, azimo]) => {
-      // TODO: Errors only shown for transferwise
-      const result = { transferwise, skrill, easysend, spoko, azimo };
-      console.log(JSON.stringify(result, null, 2));
+    try {
+      const quotes = await Promise.all([
+        quoteGetters.map(({ quoteGetter, name }) => {
+          const result = quoteGetter(query);
+          const timedResult = timeout(result, 5000);
+          const formattedTimedResult = standardHandle(timedResult, name);
 
-      return response
-        .type("json")
-        .send(
-          JSON.stringify(
-            { transferwise, skrill, easysend, spoko, azimo },
-            null,
-            2
-          )
-        );
-    });
+          return formattedTimedResult;
+          // standardHandle(timeout(quoteGetter(query), 5000), name);
+        }),
+      ]);
+
+      return response.json(quotes);
+    } catch (error) {
+      return console.log("[getQuoteController] Unexpected error:", error);
+    }
   };
-})();
+};

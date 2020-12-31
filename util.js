@@ -1,5 +1,6 @@
-// LEARN: ES6 module system vs CommonJS
-function Deferred() {
+import { serializeError } from "serialize-error";
+
+export function Deferred() {
   let deferred = {};
   let promise = new Promise((resolve, reject) => {
     deferred.resolve = resolve;
@@ -11,13 +12,12 @@ function Deferred() {
 
 // TODO: QuoteGetterError object
 // TODO: Error trace
-function createHandler(name) {
+export function createHandler(name) {
   return function handle(value, log, error, errorLog) {
     if (
       (isNaN(value) && !value) ||
       (Array.isArray(value) && value.length === 0)
     ) {
-      //if (title) console.log(`${title.toUppercase()} LOG:`);
       console.log(errorLog);
       console.log(error);
       throw error;
@@ -29,8 +29,8 @@ function createHandler(name) {
   };
 }
 
-function signatureHandler(
-  queryConfig,
+export function signatureHandler(
+  query,
   signatureMap = {
     senderCountry: "senderCountry",
     senderCurrency: "senderCurrency",
@@ -43,7 +43,7 @@ function signatureHandler(
 ) {
   const newEntries = Object.entries(signatureMap).map(
     ([sourceKey, targetKey]) => {
-      const sourceValue = queryConfig[sourceKey];
+      const sourceValue = query[sourceKey];
 
       if (sourceValue === null) return;
 
@@ -65,7 +65,7 @@ function signatureHandler(
   return Object.fromEntries(newEntries);
 }
 
-function iso2to3() {
+export function iso2to3() {
   fs.writeFileSync(
     path.join(__dirname, "/public/data/iso3-2.json"),
     JSON.stringify(
@@ -82,8 +82,29 @@ function iso2to3() {
   );
 }
 
-module.exports = {
-  Deferred,
-  createHandler,
-  signatureHandler,
-};
+export function formatResult(name, fn) {
+  return {
+    name,
+    result: fn(),
+  };
+}
+
+export function timeout(promise, duration) {
+  return Promise.race([promise, timeoutFn()]);
+
+  function timeoutFn() {
+    return new Promise((_, reject) => {
+      const timeoutId = setTimeout(() => {
+        clearTimeout(timeoutId);
+        return reject(new Error("Deferred promise timed out"));
+      }, duration);
+    });
+  }
+}
+
+export function standardHandle(promise, name) {
+  return promise
+    .then((result) => ({ status: "success", result }))
+    .catch((error) => ({ status: "failure", reason: error.message }))
+    .then((finalResult) => ({ name, ...finalResult }));
+}

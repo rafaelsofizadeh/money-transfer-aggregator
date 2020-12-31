@@ -1,7 +1,7 @@
 /*! choices.js v9.0.1 | © 2019 Josh Johnson | https://github.com/jshjohnson/Choices#readme */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		export factory();
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
@@ -230,7 +230,7 @@ deepmerge.all = function deepmergeAll(array, options) {
 
 var deepmerge_1 = deepmerge;
 
-module.exports = deepmerge_1;
+export deepmerge_1;
 
 
 /***/ }),
@@ -302,7 +302,7 @@ function symbolObservablePonyfill(root) {
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(7);
+export __webpack_require__(7);
 
 
 /***/ }),
@@ -328,14 +328,14 @@ try {
 // We return undefined, instead of nothing here, so it's
 // easier to handle this case. if(!global) { ...}
 
-module.exports = g;
+export g;
 
 
 /***/ }),
 /* 6 */
 /***/ (function(module, exports) {
 
-module.exports = function(originalModule) {
+export function(originalModule) {
 	if (!originalModule.webpackPolyfill) {
 		var module = Object.create(originalModule);
 		// module.parent = undefined by default

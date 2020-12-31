@@ -1,9 +1,9 @@
 // Currencies
-const cuc = require("currency-codes");
+import cuc from "currency-codes";
 // Countries
-const coc = require("country-code-lookup");
+import coc from "country-code-lookup";
 
-module.exports = (request, response, next) => {
+export default (request, response, next) => {
   const argumentsCarrier = request.body;
 
   if (!Object.keys(argumentsCarrier).length) {
@@ -17,8 +17,6 @@ module.exports = (request, response, next) => {
     recipientCountry,
     senderAmount,
   } = argumentsCarrier;
-
-  console.log("[processInput] Input query:", argumentsCarrier);
 
   if (
     !senderCurrency ||
@@ -65,15 +63,13 @@ module.exports = (request, response, next) => {
 
   const parsedAmount = parseFloat(parseFloat(senderAmount).toFixed(2));
 
-  response.locals.queryConfig = {
+  response.locals.query = {
     senderCurrency: senderCurrencyObj,
     senderCountry: senderCountryObj,
     recipientCurrency: recipientCurrencyObj,
     recipientCountry: recipientCountryObj,
     senderAmount: parsedAmount,
   };
-
-  console.log("[processInput] Output query:", response.locals.queryConfig);
 
   return next();
 };

@@ -1,46 +1,39 @@
-(async function () {
-  const path = require("path");
-  const express = require("express");
-  const app = express();
+import express from "express";
+import cors from "cors";
+import puppeteer from "puppeteer";
 
-  /**
-   * Middleware
-   */
+import config from "./config.json";
+import inputProcessingMiddleware from "./middleware/processInputMiddleware.js";
+import getQuoteControllerConstructor from "./controller/getQuoteController/index.js";
 
-  app.use(express.urlencoded({ extended: true }));
-  app.use(express.json());
-  app.use(express.static(path.join(__dirname, "./public")));
+const app = express();
 
-  /**
-   * View engine
-   */
+/**
+ * Middleware
+ */
 
-  const fs = require("fs");
+app.use(cors());
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-  app.set("view engine", "ejs");
-  app.set("views", path.join(__dirname, "/public/views"));
+/**
+ * Route middleware / controllers
+ */
 
-  /**
-   * Route middleware / controllers
-   */
+const browser = await puppeteer.launch({
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  ignoreHTTPSErrors: true,
+  dumpio: false,
+});
 
-  const inputProcessingMiddleware = require("./middleware/processInputMiddleware");
+const getQuoteController = await getQuoteControllerConstructor(browser);
 
-  const getQuoteController = await require("./controller/getQuoteController");
-  // const getQuoteTestController = require("./controller/getQuoteController/test");
+app.post("/getQuote", inputProcessingMiddleware, getQuoteController);
 
-  app.get("/", (request, response) => {
-    return response.render("pages/main.ejs");
-  });
-  app.post("/getQuote", inputProcessingMiddleware, getQuoteController);
+/**
+ * Bootstrap
+ */
 
-  /**
-   * Bootstrap
-   */
-
-  const config = require("./config.json");
-
-  app.listen(process.env.PORT || config["port"], () => {
-    console.log("[index] App started");
-  });
-})();
+app.listen(process.env.PORT || config["port"], () => {
+  console.log("[index] App started");
+});
