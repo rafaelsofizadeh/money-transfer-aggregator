@@ -5,17 +5,17 @@ import easysendGetQuote from "./quoteGetters/easysend.js";
 import spokoConstructor from "./quoteGetters/spoko.js";
 import skrillConstructor from "./quoteGetters/skrill.js";
 
-import { standardHandle, timeout } from "../../util.js";
+import { standardHandle } from "../../util.js";
 
 export default async (browser) => {
-  // const spokoGetQuote = await spokoConstructor(browser);
+  const spokoGetQuote = await spokoConstructor(browser);
   const skrillGetQuote = await skrillConstructor(browser);
 
   const quoteGetters = [
-    /*{ quoteGetter: azimoGetQuote, name: "azimo" },
+    { quoteGetter: azimoGetQuote, name: "azimo" },
     { quoteGetter: transferwiseGetQuote, name: "transferwise" },
     { quoteGetter: easysendGetQuote, name: "easysend" },
-    { quoteGetter: spokoGetQuote, name: "spoko" },*/
+    { quoteGetter: spokoGetQuote, name: "spoko" },
     { quoteGetter: skrillGetQuote, name: "skrill" },
   ];
 
@@ -23,16 +23,15 @@ export default async (browser) => {
     const { query } = response.locals;
 
     try {
-      const quotes = await Promise.all([
+      const quotes = await Promise.all(
         quoteGetters.map(({ quoteGetter, name }) => {
           const result = quoteGetter(query);
-          const timedResult = timeout(result, 5000);
-          const formattedTimedResult = standardHandle(timedResult, name);
+          const formattedTimedResult = standardHandle(result, name);
 
           return formattedTimedResult;
           // standardHandle(timeout(quoteGetter(query), 5000), name);
-        }),
-      ]);
+        })
+      );
 
       return response.json(quotes);
     } catch (error) {

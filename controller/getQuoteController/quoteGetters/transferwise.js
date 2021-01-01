@@ -10,10 +10,11 @@ export default async (query, sandbox = true) => {
   );
 
   const requestOptions = {
+    method: "post",
     baseURL: sandbox
       ? "https://api.sandbox.transferwise.tech"
       : "https://api.transferwise.com",
-    url: `/v1/quotes`,
+    url: "/v1/quotes",
     headers: {
       Authorization: "Bearer 3dd320ab-2fd2-4ba3-872e-34ff415ceff5",
       "Content-Type": "application/json",
@@ -29,8 +30,8 @@ export default async (query, sandbox = true) => {
 
   const {
     data: { targetAmount: finalAmount },
-  } = await axios.post(requestOptions).catch((error) => {
-    console.log("[transferwise][axios] Error:", error);
+  } = await axios(requestOptions).catch((error) => {
+    console.log("[transferwise][axios] Error:", error.response.data);
     throw new Error("Request error");
   });
 

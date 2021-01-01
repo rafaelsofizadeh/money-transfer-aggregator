@@ -1,23 +1,25 @@
 "use strict";
 
-import { Deferred, signatureHandler } from "../../../util.js";
+import { signatureHandler } from "../../../util.js";
 
 async function typeInInput(input, content = Math.floor(Math.random() * 1000)) {
+  //https://stackoverflow.com/a/52633235
   await input.click({ clickCount: 3 });
   await input.type(content.toString());
 }
 
 function createRequestInterceptor(interceptUrl, payload) {
   return function requestInterceptor(request) {
-    // https://github.com/puppeteer/puppeteer/blob/v1.14.0/docs/api.md#requestresourcetype
-    if (
-      ["image", "font", "stylesheet", "media"].includes(request.resourceType())
-    ) {
-      return request.abort();
-    }
-
     if (!request._interceptionHandled) {
-      if (request.url().includes(interceptUrl) && payload) {
+      if (
+        ["image", "font", "stylesheet", "media"].includes(
+          request.resourceType()
+        )
+      ) {
+        return request.abort();
+      }
+
+      if (request.url().includes(interceptUrl)) {
         const augmentedPayload = {
           postData: JSON.stringify({
             ...JSON.parse(request.postData()),
@@ -29,20 +31,6 @@ function createRequestInterceptor(interceptUrl, payload) {
       }
 
       return request.continue();
-    }
-  };
-}
-
-function createResponseInterceptor(interceptUrl, resolve, reject) {
-  return async function responseInterceptor(response) {
-    try {
-      if (response.url().includes(interceptUrl)) {
-        const result = await response.json();
-        // TODO: format result, i.e. add a formatting function as a parameter
-        return resolve(result);
-      }
-    } catch (error) {
-      return reject(new Error("Response interceptor error"));
     }
   };
 }
@@ -61,16 +49,12 @@ export default async (
   await page.setDefaultNavigationTimeout(0);
   await page.goto(url, { waitUntil: "networkidle0" });
   await page.setRequestInterception(true);
-  await page.screenshot({ path: "page-input.png" });
 
-  //https://stackoverflow.com/a/52633235
   let input = null;
 
   while (input === null) {
     input = await page.$(inputSelector);
   }
-
-  await input.screenshot({ path: "input.png" });
 
   return async (query) => {
     const payload = signatureHandler(
@@ -81,19 +65,15 @@ export default async (
     );
 
     const requestInterceptor = createRequestInterceptor(interceptUrl, payload);
-
-    const { resolve, reject, promise: response } = new Deferred();
-    const responseInterceptor = createResponseInterceptor(
-      interceptUrl,
-      resolve,
-      reject
-    );
-
     page.on("request", requestInterceptor);
-    page.on("response", responseInterceptor);
 
     await typeInInput(input);
 
-    return response;
+    const response = await page.waitForResponse(
+      (response) => response.url().includes(interceptUrl),
+      { timeout: 5000 }
+    );
+
+    return response.json();
   };
 };
