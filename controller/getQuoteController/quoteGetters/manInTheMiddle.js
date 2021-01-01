@@ -1,6 +1,6 @@
 "use strict";
 
-import { signatureHandler } from "../../../util.js";
+import { Deferred, signatureHandler } from "../../../util.js";
 
 async function typeInInput(input, content = Math.floor(Math.random() * 1000)) {
   //https://stackoverflow.com/a/52633235
@@ -35,6 +35,25 @@ function createRequestInterceptor(interceptUrl, payload) {
   };
 }
 
+function createResponseInterceptor(interceptUrl, resolve, reject) {
+  return async function responseInterceptor(response) {
+    try {
+      if (response.url().includes(interceptUrl)) {
+        const result = await response.json();
+
+        if (response.status() >= 299) {
+          return reject({ message: JSON.stringify(result) });
+        }
+        return resolve(result);
+      }
+    } catch (error) {
+      const message = "Scraped website not responding";
+      console.log(`[manInTheMiddle] Error: ${message}`);
+      return reject(message);
+    }
+  };
+}
+
 export default async (
   browser,
   signatureMap,
@@ -42,7 +61,8 @@ export default async (
   currencyCodeType,
   url,
   inputSelector,
-  interceptUrl
+  interceptUrl,
+  formatter
 ) => {
   const page = await browser.newPage();
 
@@ -65,15 +85,22 @@ export default async (
     );
 
     const requestInterceptor = createRequestInterceptor(interceptUrl, payload);
+    const { resolve, reject, promise: response } = new Deferred();
+    const responseInterceptor = createResponseInterceptor(
+      interceptUrl,
+      resolve,
+      reject
+    );
+
     page.on("request", requestInterceptor);
+    page.on("response", responseInterceptor);
 
     await typeInInput(input);
 
-    const response = await page.waitForResponse(
-      (response) => response.url().includes(interceptUrl),
-      { timeout: 5000 }
+    const result = await response.finally(
+      async () => await page.removeAllListeners()
     );
 
-    return response.json();
+    return formatter(result);
   };
 };

@@ -7,7 +7,9 @@ export default (request, response, next) => {
   const argumentsCarrier = request.body;
 
   if (!Object.keys(argumentsCarrier).length) {
-    return next(new Error("Query must not be empty."));
+    const message = "Query must not be empty.";
+    console.log(`[processInputMiddleware] Error: ${message}`);
+    return next(message);
   }
 
   const {
@@ -25,16 +27,19 @@ export default (request, response, next) => {
     !recipientCountry
   ) {
     response.status(400);
-    return next(
-      new Error(
-        "Incomplete request body. Payload should include [senderCurrency, senderCountry, recipientCurrency, recipientCountry]."
-      )
-    );
+
+    const message =
+      "Incomplete request body. Payload should include [senderCurrency, senderCountry, recipientCurrency, recipientCountry].";
+    console.log(`[processInputMiddleware] Error: ${message}`);
+    return next(message);
   }
 
   if (isNaN(senderAmount)) {
     response.status(400);
-    return next(new TypeError("Amount should be a float number."));
+
+    const message = "Amount should be a float number.";
+    console.log(`[processInputMiddleware] Error: ${message}`);
+    return next(message);
   }
 
   const [
@@ -51,14 +56,18 @@ export default (request, response, next) => {
 
   if (!senderCountryObj || !recipientCountryObj) {
     response.status(400);
-    return next(
-      new TypeError("Please enter a valid ISO 3166-1 alpha-3 country code.")
-    );
+
+    const message = "Please enter a valid ISO 3166-1 alpha-3 country code.";
+    console.log(`[processInputMiddleware] Error: ${message}`);
+    return next(message);
   }
 
   if (!senderCurrencyObj || !recipientCurrencyObj) {
     response.status(400);
-    return next(new TypeError("Please enter a valid ISO 4217 currency code."));
+
+    const message = "Please enter a valid ISO 4217 currency code.";
+    console.log(`[processInputMiddleware] Error: ${message}`);
+    return next(message);
   }
 
   const parsedAmount = parseFloat(parseFloat(senderAmount).toFixed(2));

@@ -5,7 +5,7 @@ import easysendGetQuote from "./quoteGetters/easysend.js";
 import spokoConstructor from "./quoteGetters/spoko.js";
 import skrillConstructor from "./quoteGetters/skrill.js";
 
-import { standardHandle } from "../../util.js";
+import { standardHandle, timeout } from "../../util.js";
 
 export default async (browser) => {
   const spokoGetQuote = await spokoConstructor(browser);
@@ -24,13 +24,9 @@ export default async (browser) => {
 
     try {
       const quotes = await Promise.all(
-        quoteGetters.map(({ quoteGetter, name }) => {
-          const result = quoteGetter(query);
-          const formattedTimedResult = standardHandle(result, name);
-
-          return formattedTimedResult;
-          // standardHandle(timeout(quoteGetter(query), 5000), name);
-        })
+        quoteGetters.map(({ quoteGetter, name }) =>
+          standardHandle(quoteGetter(query), name)
+        )
       );
 
       return response.json(quotes);

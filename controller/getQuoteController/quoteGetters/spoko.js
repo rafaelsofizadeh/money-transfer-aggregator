@@ -12,5 +12,6 @@ export default (browser) =>
     undefined,
     "https://spoko.app",
     '#layout > div > div[ui-view="content"] > div > div > div.hero > div.spokoRootIndex-calcWrapper.right > div > form > div:not([class]) > div:nth-child(2) > div.wrap > input',
-    "/calculate"
+    "/calculate",
+    ({ destinationAmount: { amount } }) => amount
   );

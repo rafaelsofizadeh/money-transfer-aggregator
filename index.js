@@ -31,6 +31,14 @@ const getQuoteController = await getQuoteControllerConstructor(browser);
 app.post("/getQuote", inputProcessingMiddleware, getQuoteController);
 
 /**
+ * Error handling
+ */
+
+app.use((error, req, res, next) => {
+  return res.status(500).json({ error });
+});
+
+/**
  * Bootstrap
  */
 
