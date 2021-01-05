@@ -1,0 +1,78 @@
+.quote-form {
+  --align-form-label: 0.6rem;
+
+  &_wide {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+
+    & .quote-form__block_width {
+      &_full {
+        width: 13rem;
+      }
+
+      &_narrow {
+        width: 7rem;
+      }
+    }
+
+    & .quote-form__label {
+      display: block;
+    }
+  }
+
+  &__block {
+    &_accent {
+      background-color: rgb(255, 234, 50);
+    }
+
+    &_padded {
+      padding: 0 var(--align-form-label);
+      width: 100%;
+    }
+  }
+
+  &__label {
+    margin: 0 0 var(--label-distance-from-form) var(--align-form-label);
+    color: rgb(172, 172, 172);
+    font-weight: bolder;
+  }
+
+  &__input {
+    display: flex;
+    align-items: center;
+
+    &-wrapper {
+      &_padded {
+        padding: 0 2px; /* to offset border width */
+      }
+    }
+  }
+}
+
+.amount-input {
+  &__field {
+    width: 100%;
+    padding: 0 var(--align-form-label);
+
+    &_numeric {
+      width: calc(100% - 5rem);
+    }
+
+    &_currency {
+      width: 5rem;
+    }
+
+    &s {
+      display: flex;
+    }
+  }
+
+  &__currency-selector {
+    padding: 0 var(--align-form-label);
+    border-left-width: 1px;
+    border-left-color: gray;
+    border-left-style: solid;
+  }
+}

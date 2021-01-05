@@ -15,6 +15,7 @@ const app = express();
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "front/build")));
 
 /**
  * Route middleware / controllers
@@ -29,6 +30,10 @@ const browser = await puppeteer.launch({
 const getQuoteController = await getQuoteControllerConstructor(browser);
 
 app.post("/getQuote", inputProcessingMiddleware, getQuoteController);
+
+app.get("*", (request, response) => {
+  response.sendFile(path.join(__dirname, "front/build/index.html"));
+});
 
 /**
  * Error handling

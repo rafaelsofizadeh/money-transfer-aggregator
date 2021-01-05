@@ -1,0 +1,167 @@
+:root {
+  --gutter: 3rem;
+}
+
+.card {
+  width: 17rem;
+  height: 28rem;
+  padding: 1.5rem;
+  display: flex;
+  position: relative;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  text-align: center;
+  font-size: smaller;
+  overflow: hidden;
+
+  &__bg {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.95) 40%,
+        rgba(255, 255, 255, 0)
+      ),
+      url("../img/red-low-poly-bg.jpg");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: -1;
+  }
+
+  &s {
+    margin-top: 3rem;
+    display: flex;
+    flex-direction: column;
+
+    &-row {
+      display: flex;
+
+      &:not(:first-of-type) {
+        margin-top: 2rem;
+      }
+
+      & > .card:not(:first-of-type) {
+        margin-left: calc((100% - 17rem * 3) / 2);
+      }
+    }
+  }
+
+  &__top {
+    position: absolute;
+    top: 0;
+    padding: 0.2rem;
+    background: linear-gradient(to right, #8bf13a, #f6ff76);
+  }
+
+  &__logo {
+    height: 2.5rem;
+  }
+
+  &__payment-methods {
+    &-section {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    &-direction {
+      margin-bottom: var(--label-distance-from-form);
+    }
+
+    &-icon {
+      width: 1rem;
+      height: 1rem;
+
+      &:not(:last-of-type) {
+        margin-right: 0.5rem;
+      }
+    }
+  }
+
+  &__quote {
+    &_regular {
+      display: inline-flex;
+      align-items: center;
+      padding: 0 1rem;
+    }
+
+    &-data {
+      &-input {
+        flex-grow: 1;
+        font-size: smaller;
+        border-right: 1px solid gray;
+      }
+
+      &-output {
+        flex-grow: 3;
+        font-size: large;
+        font-weight: bold;
+      }
+    }
+
+    &-description {
+      height: 80px;
+
+      &-point {
+        text-align: left;
+        list-style-type: "+";
+        list-style-position: inside;
+
+        &:not(:last-of-type) {
+          margin-bottom: var(--label-distance-from-form);
+        }
+
+        &-text {
+          padding-left: 1ch;
+        }
+      }
+    }
+  }
+
+  &__section {
+    width: 100%;
+  }
+
+  &__block {
+    &_width {
+      &_smaller {
+        width: 6rem;
+      }
+    }
+
+    &_transparent {
+      background-color: transparent;
+    }
+  }
+
+  &__bonus {
+    flex-direction: column;
+
+    &-section {
+      display: flex;
+      justify-content: center;
+    }
+
+    &-value {
+      background-color: red;
+      color: yellow;
+      font-size: large;
+    }
+  }
+
+  &__button {
+    &-section {
+      padding: 0 5%;
+    }
+  }
+
+  &__label-under {
+    margin-top: var(--label-distance-from-form);
+    color: white;
+  }
+}
