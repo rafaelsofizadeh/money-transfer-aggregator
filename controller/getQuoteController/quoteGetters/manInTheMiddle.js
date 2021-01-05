@@ -1,8 +1,13 @@
 "use strict";
 
+import pq from "p-queue";
+const PQueue = pq.default;
+
 import { Deferred, signatureHandler } from "../../../util.js";
 
 async function typeInInput(input, content = Math.floor(Math.random() * 1000)) {
+  await input.click();
+  await input.focus();
   //https://stackoverflow.com/a/52633235
   await input.click({ clickCount: 3 });
   await input.type(content.toString());
@@ -62,8 +67,10 @@ export default async (
   url,
   inputSelector,
   interceptUrl,
-  formatter
+  formatter,
+  reloadPageCondition
 ) => {
+  const queue = new PQueue({ concurrency: 1 });
   const page = await browser.newPage();
 
   await page.setDefaultNavigationTimeout(0);
@@ -76,7 +83,9 @@ export default async (
     input = await page.$(inputSelector);
   }
 
-  return async (query) => {
+  return (query) => queue.add(() => getQuote(query));
+
+  async function getQuote(query) {
     const payload = signatureHandler(
       query,
       signatureMap,
@@ -101,6 +110,14 @@ export default async (
       async () => await page.removeAllListeners()
     );
 
+    if (
+      typeof reloadPageCondition === "function" &&
+      reloadPageCondition(result)
+    ) {
+      console.log("page reload");
+      page.reload({ waitUntil: "networkidle0" });
+    }
+
     return formatter(result);
-  };
+  }
 };

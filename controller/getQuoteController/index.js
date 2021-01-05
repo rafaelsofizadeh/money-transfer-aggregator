@@ -25,7 +25,7 @@ export default async (browser) => {
     try {
       const quotes = await Promise.all(
         quoteGetters.map(({ quoteGetter, name }) =>
-          standardHandle(quoteGetter(query), name)
+          standardHandle(timeout(quoteGetter(query), 4000), name)
         )
       );
 
