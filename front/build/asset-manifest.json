@@ -1,0 +1,28 @@
+{
+  "files": {
+    "main.css": "/static/css/main.13d6b543.chunk.css",
+    "main.js": "/static/js/main.0196c047.chunk.js",
+    "main.js.map": "/static/js/main.0196c047.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.68d5a68c.js",
+    "runtime-main.js.map": "/static/js/runtime-main.68d5a68c.js.map",
+    "static/js/2.98c1d6e9.chunk.js": "/static/js/2.98c1d6e9.chunk.js",
+    "static/js/2.98c1d6e9.chunk.js.map": "/static/js/2.98c1d6e9.chunk.js.map",
+    "static/js/3.9da3b787.chunk.js": "/static/js/3.9da3b787.chunk.js",
+    "static/js/3.9da3b787.chunk.js.map": "/static/js/3.9da3b787.chunk.js.map",
+    "index.html": "/index.html",
+    "precache-manifest.55c20673875438ca02ba305fea14622e.js": "/precache-manifest.55c20673875438ca02ba305fea14622e.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/main.13d6b543.chunk.css.map": "/static/css/main.13d6b543.chunk.css.map",
+    "static/js/2.98c1d6e9.chunk.js.LICENSE.txt": "/static/js/2.98c1d6e9.chunk.js.LICENSE.txt",
+    "static/media/bank.png": "/static/media/bank.a64d1dc8.png",
+    "static/media/creditCard.png": "/static/media/creditCard.d94847c1.png",
+    "static/media/moneyStack.png": "/static/media/moneyStack.2052c3df.png",
+    "static/media/card.scss": "/static/media/red-low-poly-bg.21a1570b.jpg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.68d5a68c.js",
+    "static/js/2.98c1d6e9.chunk.js",
+    "static/css/main.13d6b543.chunk.css",
+    "static/js/main.0196c047.chunk.js"
+  ]
+}
