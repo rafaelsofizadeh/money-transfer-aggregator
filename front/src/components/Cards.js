@@ -36,7 +36,9 @@ const cardDetails = {
     logoFileName: "skrillLogo.png",
     hue: 298,
     bonus: { exists: true, sponsor: "PayMentor.Club" },
-    description: ["первый перевод для новых клиентов с учетом денежного бонуса"],
+    description: [
+      "первый перевод для новых клиентов с учетом денежного бонуса",
+    ],
   },
   azimo: {
     name: "Azimo",
@@ -51,6 +53,10 @@ const cardDetails = {
 };
 
 const Cards = ({ data: { request, response: quotes } }) => {
+  if (!Array.isArray(quotes)) {
+    return false;
+  }
+
   const successfulQuotes = quotes.filter((quote) => quote.status === "success");
 
   if (successfulQuotes.length) {

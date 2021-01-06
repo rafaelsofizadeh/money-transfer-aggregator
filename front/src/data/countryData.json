@@ -1,13 +1,5 @@
 [
   {
-    "name": "Абхазия",
-    "fullname": "Республика Абхазия",
-    "english": "Abkhazia",
-    "iso2": "AB",
-    "iso3": "ABH",
-    "iso": "895"
-  },
-  {
     "name": "Австралия",
     "fullname": "",
     "english": "Australia",
@@ -48,22 +40,6 @@
     "iso": "012"
   },
   {
-    "name": "Американское Самоа",
-    "fullname": "",
-    "english": "American Samoa",
-    "iso2": "AS",
-    "iso3": "ASM",
-    "iso": "016"
-  },
-  {
-    "name": "Ангилья",
-    "fullname": "",
-    "english": "Anguilla",
-    "iso2": "AI",
-    "iso3": "AIA",
-    "iso": "660"
-  },
-  {
     "name": "Ангола",
     "fullname": "Республика Ангола",
     "english": "Angola",
@@ -78,14 +54,6 @@
     "iso2": "AD",
     "iso3": "AND",
     "iso": "020"
-  },
-  {
-    "name": "Антарктида",
-    "fullname": "",
-    "english": "Antarctica",
-    "iso2": "AQ",
-    "iso3": "ATA",
-    "iso": "010"
   },
   {
     "name": "Антигуа и Барбуда",

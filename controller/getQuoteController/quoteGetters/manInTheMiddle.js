@@ -110,13 +110,13 @@ export default async (
       async () => await page.removeAllListeners()
     );
 
-    if (
+    /*if (
       typeof reloadPageCondition === "function" &&
       reloadPageCondition(result)
     ) {
       console.log("page reload");
       page.reload({ waitUntil: "networkidle0" });
-    }
+    }*/
 
     return formatter(result);
   }
