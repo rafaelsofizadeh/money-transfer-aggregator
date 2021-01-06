@@ -18,11 +18,9 @@ const Card = function ({
     bonus,
   },
 }) {
-  console.log("Card", arguments);
-
   return (
     <div className="card block_borders_none" style={{ backgroundImage }}>
-      <span class="card__bg" style={{ filter: `hue-rotate(${hue}deg)` }}></span>
+      <span className="card__bg" style={{ filter: `hue-rotate(${hue}deg)` }}></span>
       {isTopQuote && (
         <section className="card__section card__top">
           <p>
